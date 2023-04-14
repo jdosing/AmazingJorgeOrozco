@@ -1,33 +1,25 @@
-// {/* <article class="card border-primary col-10 col-md-3 col-xl-4">
-//     <img src="../images/Cine7.jpg" class="card-img-top" alt="...">
-//     <div class="card-body">
-//         <h4 class="card-title">Card title</h4>
-//         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-//     </div>
-// </article>  */}
 
-// / `
-// //         <article class="card border-primary col-10 col-md-3 col-xl-4">
-// //             <img class="p-2 " src="${cartaEvento.image}" alt="...">
-// //             <div class="card-body">
-// //                 <h4 class="card-title">${cartaEvento.name}</h4>
-// //                 <p class="card-text">${cartaEvento.description}</p>
-// //                 <p class="col-4">Prices: $${cartaEvento.price}</p>
-// //                 <a href="./assets/pages/detail.html" class=" col-5 btn btn-warning">Detail</a>
-// //             </div>
-// //         </article>
-// // `
-// //  
 
 const $contenedor= document.getElementById(`contenedorCards`)
-const losEventos= totalEventos.eventos
+let losEventos
+// = totalEventos.eventos
+const url = `https://mindhub-xj03.onrender.com/api/amazing`
+fetch( url )
+// console.log(fetch( url ))
+    .then(response =>response.json())
+    .then (datos=>{
+        losEventos=datos.events
+        console.log (losEventos)
+        rendertarjetas (losEventos,$contenedor)
+        const arraycategorias =  [...new Set (losEventos.map(evento=>evento.category))]
+        imprimircategorias(arraycategorias,$contenedorcheck)
+    })
+    .catch (err => console.log(err))
 
-const cartaEvento = losEventos[0]
 
-
-function rendertarjetas (eventos, contenedor){
+function rendertarjetas (events, contenedor){
     let template=``
-    for (let cartaEvento of eventos){
+    for (let cartaEvento of events){
         template += crearCards(cartaEvento)
     } if (template===""){
         contenedor.innerHTML="<h2><b>`No items to display`</b></h2>"
@@ -36,7 +28,7 @@ function rendertarjetas (eventos, contenedor){
     }
     
 }
-rendertarjetas (losEventos,$contenedor)
+
 
 function crearCards( cartaEvento ){
     return `
@@ -61,12 +53,9 @@ const $=id=> document.getElementById(id)
 let $contenedorcheck=$(`contenedorcheck`)
 let $barbusqueda=$(`barbusqueda`)
 
-const categorias = losEventos.map(evento=>evento.category)
 
-const setcategorias = new Set (categorias)
 
-const arraycategorias = Array.from(setcategorias)
-imprimircategorias(arraycategorias,$contenedorcheck)
+
 
 function imprimircategorias (categorias, contenedor){
     let template= ""
@@ -78,36 +67,93 @@ function imprimircategorias (categorias, contenedor){
     }
     contenedor.innerHTML+=template
 }
+
+
 let contselect=[]
-
-
 $contenedorcheck.addEventListener(`change`,()=>{
     contselect=document.querySelectorAll(`input[type="checkbox"]:checked`)
     contselect=Array.from(document.querySelectorAll(`input[type="checkbox"]:checked`))
     nuevosele =contselect.map(input=>input.value)
     rendertarjetas(filtrocruzado(losEventos,nuevosele,$barbusqueda.value),$contenedor)
     // rendertarjetas(filtrarcategoria(losEventos,nuevosele),$contenedor)
-
 })
+
 $barbusqueda.addEventListener(`input`,()=>{
     rendertarjetas(filtrocruzado(losEventos,nuevosele,$barbusqueda.value),$contenedor)
     // rendertarjetas(filtrobuscador(losEventos,$barbusqueda.value),$contenedor)
 })
+
 function filtrarcategoria (eventos,categorias){
         if (categorias.length==0){
             return eventos
         }
     return aux = eventos.filter(evento=>categorias.includes(evento.category))
-
 }
+
 function filtrobuscador (eventos, texto){
     return eventos.filter(evento=>evento.category.toLowerCase().includes(texto.toLowerCase())||evento.name.toLowerCase().includes(texto.toLowerCase()))
 }
+
 function filtrocruzado (eventos, categorias, texto){
     const filcategoria= filtrarcategoria(eventos,categorias)
     const filtroporbuscador=filtrobuscador(filcategoria,texto)
     return filtroporbuscador
 }
+
+
+
+
+
+   // .then(datos => {
+    //     eventosFuturos = datos.events.filter((evento=>evento.date>datos.currentDate))
+    //     const arraycategorias = [...new Set( eventosFuturos.map(evento=>evento.category))]
+    //     imprimircategorias(arraycategorias,$contenedorcheck)
+    // })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// {/* <article class="card border-primary col-10 col-md-3 col-xl-4">
+//     <img src="../images/Cine7.jpg" class="card-img-top" alt="...">
+//     <div class="card-body">
+//         <h4 class="card-title">Card title</h4>
+//         <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+//     </div>
+// </article>  */}
+
+// / `
+// //         <article class="card border-primary col-10 col-md-3 col-xl-4">
+// //             <img class="p-2 " src="${cartaEvento.image}" alt="...">
+// //             <div class="card-body">
+// //                 <h4 class="card-title">${cartaEvento.name}</h4>
+// //                 <p class="card-text">${cartaEvento.description}</p>
+// //                 <p class="col-4">Prices: $${cartaEvento.price}</p>
+// //                 <a href="./assets/pages/detail.html" class=" col-5 btn btn-warning">Detail</a>
+// //             </div>
+// //         </article>
+// // `
+// //  
+
+
 
 // let $checkbox2=$(`checkbox1`)
 // let $checkbox1=$(`checkbox2`)

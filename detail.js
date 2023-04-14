@@ -1,18 +1,28 @@
 const $contenedor= document.getElementById(`contenedorCards`)
-const losEventos= totalEventos.eventos
+let eventoEncontrado 
+let losEventos
+// = totalEventos.eventos
+const url = `https://mindhub-xj03.onrender.com/api/amazing`
+fetch( url )
+// console.log(fetch( url ))
+    .then(response =>response.json())
+    .then (datos=>{
+        losEventos=datos.events
+        console.log (losEventos)
+        eventoEncontrado = losEventos.find(events=>events.name===nameCarta)
+        console.log(eventoEncontrado)
+        crearCards(eventoEncontrado)
+    })
+    .catch (err => console.log(err))
 
-// console.log([document])
+console.log([document])
 let urlCarta = location.search
-// console.log(urlCarta)
+console.log(urlCarta)
 let parametros = new URLSearchParams(urlCarta)
 // console.log(parametros)
 let nameCarta= parametros.get("name")
 // console.log(nameCarta)
 
-let eventoEncontrado = losEventos.find(evento=>evento.name==nameCarta)
-console.log(eventoEncontrado)
-
-// 
 
 function crearCards( evento ){
     let template=``
@@ -34,57 +44,5 @@ function crearCards( evento ){
 
     
 `
-
 $contenedor.innerHTML=template
-
 }
-
-    crearCards(eventoEncontrado)
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function rendertarjetas (eventos, contenedor){
-//     let template=``
-//     for (let cartaEvento of eventos){
-//         template = crearCards(cartaEvento)
-//     } if (template===""){
-//         contenedor.innerHTML="<h2>Sin elementos para mostrar</h2>"
-//     } else {
-//         contenedor.innerHTML=template
-//     }
-    
-// }
-// rendertarjetas (losEventos,$contenedor)
-
-// function crearCards( cartaEvento ){
-//     return `
-
-//     <div class="row p-5" style="background-color: rgb(242, 225, 155);">
-//     <div class="col-7">
-//        <img class="img-fluid "  src="${cartaEvento.image}" alt="..." id="imgarticle">
-//     </div>
-//     <div class="col-5 d-flex justify-content-center " id="nuevo">
-//     <h4 class="card-title">${cartaEvento.name}</h4>
-//         <p>Fecha: ${cartaEvento.date}</p>
-//         <p>${cartaEvento.description}</p>   
-//         <p>Category: ${cartaEvento.category}
-//         <p>Place: ${cartaEvento.place}
-//         <p>Capacity: ${cartaEvento.capacity}
-//         <p>Price: $${cartaEvento.price}
-//     </div>
-// </div>
-// `
-// }

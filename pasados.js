@@ -1,8 +1,20 @@
 const $contenedor= document.getElementById(`contenedorCards`)
-const losEventos= totalEventos.eventos
+// const losEventos= totalEventos.eventos
 
+let eventosPasados
 
-const eventopasado = totalEventos.eventos.filter(pasado=>pasado.date<totalEventos.fechaActual)
+const url = `https://mindhub-xj03.onrender.com/api/amazing`
+fetch( url )
+// console.log(fetch( url ))
+    .then(response =>response.json())
+    .then (datos=>{
+        eventosPasados=datos.events.filter(eventopasado=>eventopasado.date<datos.currentDate)
+        console.log (eventosPasados)
+        rendertarjetas (eventosPasados,$contenedor)
+        const arraycategorias =  [...new Set (eventosPasados.map(evento=>evento.category))]
+        imprimircategorias(arraycategorias,$contenedorcheck)
+    })
+    .catch (err => console.log(err))
 
 function rendertarjetas (eventos, contenedor){
     let template=``
@@ -15,7 +27,6 @@ function rendertarjetas (eventos, contenedor){
     }
     
 }
-rendertarjetas (eventopasado,$contenedor)
 
 function crearCards( cartaEvento ){
     return `
@@ -39,12 +50,6 @@ const $=id=> document.getElementById(id)
 let $contenedorcheck=$(`contenedorcheck`)
 let $barbusqueda=$(`barbusqueda`)
 
-const categorias = eventopasado.map(evento=>evento.category)
-
-const setcategorias = new Set (categorias)
-
-const arraycategorias = Array.from(setcategorias)
-imprimircategorias(arraycategorias,$contenedorcheck)
 
 function imprimircategorias (categorias, contenedor){
     let template= ""
@@ -57,26 +62,29 @@ function imprimircategorias (categorias, contenedor){
     contenedor.innerHTML+=template
 }
 
-// ___________________________________________________
-
 let contselect=[]
+
 $contenedorcheck.addEventListener(`change`,()=>{
     contselect=document.querySelectorAll(`input[type="checkbox"]:checked`)
     contselect=Array.from(document.querySelectorAll(`input[type="checkbox"]:checked`))
-    nuevosele =contselect.map(input=>input.value)
-    rendertarjetas(filtrocruzado(eventopasado,nuevosele,$barbusqueda.value),$contenedor)
+    let nuevosele =contselect.map(input=>input.value)
+    rendertarjetas(filtrocruzado(eventosPasados,nuevosele,$barbusqueda.value),$contenedor)
     // rendertarjetas(filtrarcategoria(losEventos,nuevosele),$contenedor)
 
 })
 $barbusqueda.addEventListener(`input`,()=>{
-    rendertarjetas(filtrocruzado(eventopasado,nuevosele,$barbusqueda.value),$contenedor)
+    contselect=document.querySelectorAll(`input[type="checkbox"]:checked`)
+    contselect=Array.from(document.querySelectorAll(`input[type="checkbox"]:checked`))
+    let nuevosele =contselect.map(input=>input.value)
+    rendertarjetas(filtrocruzado(eventosPasados,nuevosele,$barbusqueda.value),$contenedor)
     // rendertarjetas(filtrobuscador(losEventos,$barbusqueda.value),$contenedor)
 })
+
 function filtrarcategoria (eventos,categorias){
         if (categorias.length==0){
             return eventos
         }
-    return aux = eventos.filter(evento=>categorias.includes(evento.category))
+    return eventos.filter(evento=>categorias.includes(evento.category))
 
 }
 function filtrobuscador (eventos, texto){
@@ -88,4 +96,10 @@ function filtrocruzado (eventos, categorias, texto){
     return filtroporbuscador
 }
 
+// const eventopasado = totalEventos.eventos.filter(pasado=>pasado.date<totalEventos.fechaActual)
+// const categorias = eventopasado.map(evento=>evento.category)
 
+// const setcategorias = new Set (categorias)
+
+// const arraycategorias = Array.from(setcategorias)
+// imprimircategorias(arraycategorias,$contenedorcheck)
